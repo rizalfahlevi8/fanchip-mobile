@@ -159,6 +159,122 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  void showJenisDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Daftar Jenis Hewan',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/addJenis');
+                      },
+                      child: const CircleAvatar(
+                        radius: 10,
+                        child: Icon(
+                          Icons.add,
+                          size: 18,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const Divider(
+                  color: Colors.green,
+                  thickness: 1.5,
+                ),
+                Expanded(
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    itemCount: listJenis.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      var jenis = listJenis[index];
+                      return ListTile(
+                        title: Text(
+                          jenis.nama,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        trailing: Wrap(
+                          spacing: 8,
+                          children: [
+                            IconButton(
+                              icon:
+                                  const Icon(Icons.edit, color: Colors.orange),
+                              onPressed: () {
+                                Navigator.pop(context);
+                                Navigator.of(context)
+                                    .pushNamed('/editJenis', arguments: [
+                                  jenis.id,
+                                ]);
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: () async {
+                                final result =
+                                    await jenisService.deleteJenis(jenis.id);
+
+                                if (result) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Data berhasil dihapus!'),
+                                      backgroundColor: Colors.green,
+                                    ),
+                                  );
+                                  Navigator.pop(context);
+                                  await getData(); // Memuat ulang data dari server
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Data gagal dihapus!'),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    separatorBuilder: (BuildContext context, int index) {
+                      return const Divider(
+                        color: Colors.grey,
+                        thickness: 1,
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Config().init(context);
@@ -196,25 +312,26 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
                 Config.spaceSmall,
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'Jenis Kambing',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    SizedBox(
-                      child: CircleAvatar(
+                    const SizedBox(width: 10),
+                    GestureDetector(
+                      onTap: () {
+                        showJenisDialog(context);
+                      },
+                      child: const CircleAvatar(
                         radius: 13,
                         child: Icon(Icons.more_horiz),
                       ),
-                    )
+                    ),
                   ],
                 ),
                 Config.spaceSmall,
