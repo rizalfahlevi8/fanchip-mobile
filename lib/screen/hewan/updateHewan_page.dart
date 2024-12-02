@@ -29,7 +29,6 @@ class _UpdatehewanPageState extends State<UpdatehewanPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final args = ModalRoute.of(context)!.settings.arguments as List<String>;
-      print(args.first);
       if (args.isNotEmpty) {
         _hewanId = args.first;
         getHewanData(_hewanId!);
@@ -49,14 +48,20 @@ class _UpdatehewanPageState extends State<UpdatehewanPage> {
 
   Future<void> getHewanData(String id) async {
     final hewanData = await hewanService.getDataHewanId(id);
-    print('Hewan Data: $hewanData');
     if (hewanData != null) {
       setState(() {
         _nameController.text = hewanData.nama ?? '';
         _pemeriksaanFisikController.text = hewanData.pemeriksaan_fisik ?? '';
-        _pemeriksaanLanjutanController.text =
-            hewanData.pemeriksaan_lanjutan ?? '';
+        _pemeriksaanLanjutanController.text = hewanData.pemeriksaan_lanjutan ?? '';
         _selectedJenisKambing = hewanData.jenis_id;
+
+        // Jika jenis_id tidak ditemukan, tambahkan sementara
+        if (!listJenis.any((jenis) => jenis.id == hewanData.jenis_id)) {
+          listJenis.insert(
+            0,
+            JenisModel(id: hewanData.jenis_id, nama: 'Jenis Tidak Diketahui'),
+          );
+        }
       });
     }
   }
@@ -126,7 +131,9 @@ class _UpdatehewanPageState extends State<UpdatehewanPage> {
 
                                 // Dropdown Jenis Kambing
                                 DropdownButtonFormField<String>(
-                                  value: _selectedJenisKambing,
+                                  value: listJenis.any((jenis) => jenis.id == _selectedJenisKambing)
+                                      ? _selectedJenisKambing
+                                      : null,
                                   decoration: InputDecoration(
                                     labelText: 'Jenis Kambing',
                                     prefixIcon: const Icon(Icons.category),
@@ -134,14 +141,18 @@ class _UpdatehewanPageState extends State<UpdatehewanPage> {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                   ),
-                                  items: listJenis
-                                      .map(
-                                        (jenis) => DropdownMenuItem(
-                                          value: jenis.id,
-                                          child: Text(jenis.nama),
-                                        ),
-                                      )
-                                      .toList(),
+                                  items: [
+                                    DropdownMenuItem(
+                                      value: null,
+                                      child: Text('Pilih Jenis Kambing'),
+                                    ),
+                                    ...listJenis.map(
+                                      (jenis) => DropdownMenuItem(
+                                        value: jenis.id,
+                                        child: Text(jenis.nama),
+                                      ),
+                                    ),
+                                  ],
                                   onChanged: (value) {
                                     setState(() {
                                       _selectedJenisKambing = value;
@@ -163,8 +174,7 @@ class _UpdatehewanPageState extends State<UpdatehewanPage> {
                                   decoration: InputDecoration(
                                     hintText: 'Pemeriksaan Fisik',
                                     labelText: 'Pemeriksaan Fisik',
-                                    prefixIcon:
-                                        const Icon(Icons.health_and_safety),
+                                    prefixIcon: const Icon(Icons.health_and_safety),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(8),
                                     ),
@@ -198,45 +208,40 @@ class _UpdatehewanPageState extends State<UpdatehewanPage> {
                                   },
                                 ),
                                 const SizedBox(height: 20),
-                                Button(
-                                    width: double.infinity,
-                                    title: "Update",
-                                    disable: false,
-                                    onPressed: () async {
-                                      if (_formKey.currentState!.validate()) {
-                                        bool result =
-                                            await hewanService.updateHewan(
-                                                _hewanId!,
-                                                _nameController.text,
-                                                _selectedJenisKambing!,
-                                                _pemeriksaanFisikController
-                                                    .text,
-                                                _pemeriksaanLanjutanController
-                                                    .text);
 
-                                        if (result) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            const SnackBar(
-                                              content: Text(
-                                                  'Data berhasil diperbarui!'),
-                                              backgroundColor: Colors.green,
-                                            ),
-                                          );
-                                          Navigator.of(context)
-                                              .popAndPushNamed('/home');
-                                        } else {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            const SnackBar(
-                                              content:
-                                                  Text('Pembaruan data gagal!'),
-                                              backgroundColor: Colors.red,
-                                            ),
-                                          );
-                                        }
+                                Button(
+                                  width: double.infinity,
+                                  title: "Update",
+                                  disable: false,
+                                  onPressed: () async {
+                                    if (_formKey.currentState!.validate()) {
+                                      bool result = await hewanService.updateHewan(
+                                        _hewanId!,
+                                        _nameController.text,
+                                        _selectedJenisKambing!,
+                                        _pemeriksaanFisikController.text,
+                                        _pemeriksaanLanjutanController.text,
+                                      );
+
+                                      if (result) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(
+                                            content: Text('Data berhasil diperbarui!'),
+                                            backgroundColor: Colors.green,
+                                          ),
+                                        );
+                                        Navigator.of(context).popAndPushNamed('/home');
+                                      } else {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(
+                                            content: Text('Pembaruan data gagal!'),
+                                            backgroundColor: Colors.red,
+                                          ),
+                                        );
                                       }
-                                    })
+                                    }
+                                  },
+                                )
                               ],
                             ),
                           ),

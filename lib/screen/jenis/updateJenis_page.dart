@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:fanchip_mobile/components/button.dart';
-import 'package:fanchip_mobile/model/jenis_model.dart';
 import 'package:fanchip_mobile/services/jenis_service.dart';
 
 class UpdatejenisPage extends StatefulWidget {
