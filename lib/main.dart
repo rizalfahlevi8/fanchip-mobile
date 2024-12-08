@@ -5,6 +5,7 @@ import 'package:fanchip_mobile/screen/hewan/updateHewan_page.dart';
 import 'package:fanchip_mobile/screen/jenis/createJenis_page.dart';
 import 'package:fanchip_mobile/screen/jenis/updateJenis_page.dart';
 import 'package:fanchip_mobile/screen/lahir/createLahir_page.dart';
+import 'package:fanchip_mobile/screen/lahir/updateLahir_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
 
         //lahir
         '/addLahir': (context) => const CreatelahirPage(),
+        '/editLahir': (context) => const UpdatelahirPage(),
       },
     );
   }

@@ -115,13 +115,13 @@ class LahirService {
     }
   }
 
-  Future<bool> deleteHewan(String idLahir) async {
+  Future<bool> deleteLahir(String idLahir) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final String? token = prefs.getString('token');
 
       final response = await http.delete(
-        Uri.parse('$_base/lahir/$idLahir'),
+        Uri.parse('$_base/kawin/$idLahir'),
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer $token',
