@@ -52,9 +52,7 @@ class _CreatehewanPageState extends State<CreatehewanPage> {
       appBar: AppBar(
         title: const Text('Data Kambing'),
       ),
-      body: listJenis.isEmpty
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
+      body: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: SafeArea(

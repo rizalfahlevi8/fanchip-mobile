@@ -1,43 +1,51 @@
-import 'package:fanchip_mobile/screen/give_birth_page.dart';
 import 'package:fanchip_mobile/screen/home_page.dart';
+import 'package:fanchip_mobile/screen/lahir/indexLahir_page.dart';
 import 'package:flutter/material.dart';
 
 class MainLayout extends StatefulWidget {
-  const MainLayout({super.key});
+  final int initialPage;
+
+  const MainLayout({super.key, this.initialPage = 0});
 
   @override
   State<MainLayout> createState() => _MainLayoutState();
 }
 
 class _MainLayoutState extends State<MainLayout> {
-  int currentPage = 0;
-  final PageController _page = PageController();
+  late final PageController _page;
+  int currentPage = 0; // Tambahkan variabel currentPage
+
+  @override
+  void initState() {
+    super.initState();
+    currentPage = widget.initialPage; // Inisialisasi currentPage
+    _page = PageController(initialPage: widget.initialPage);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: PageView(
-        controller: _page, // Tambahkan controller di sini
+        controller: _page,
         onPageChanged: (value) {
           setState(() {
-            currentPage = value;
+            currentPage = value; // Update currentPage saat halaman berubah
           });
         },
         children: const [
           HomePage(),
-          GiveBirthPage(),
+          IndexlahirPage(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentPage,
+        currentIndex: currentPage, // Gunakan currentPage di sini
         onTap: (page) {
           setState(() {
-            currentPage = page;
+            currentPage = page; // Update currentPage saat tombol ditekan
           });
           _page.animateToPage(
             page,
-            duration:
-                const Duration(milliseconds: 500), // Perbaikan waktu animasi
+            duration: const Duration(milliseconds: 500),
             curve: Curves.easeInOut,
           );
         },
@@ -48,7 +56,7 @@ class _MainLayoutState extends State<MainLayout> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.ballot),
-            label: 'Give Birth',
+            label: 'Lahiran',
           ),
         ],
       ),

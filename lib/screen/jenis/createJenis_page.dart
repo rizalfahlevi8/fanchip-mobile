@@ -45,9 +45,7 @@ class _CreatejenisPageState extends State<CreatejenisPage> {
       appBar: AppBar(
         title: const Text('Data Jenis Kambing'),
       ),
-      body: listJenis.isEmpty
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
+      body: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: SafeArea(

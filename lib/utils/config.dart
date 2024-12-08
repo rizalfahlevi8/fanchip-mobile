@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 class Config {
+
+  static const String baseUrl = 'http://127.0.0.1:8000/api';
+
   static MediaQueryData? mediaQueryData;
   static double? screenWidth;
   static double? screenHeight;

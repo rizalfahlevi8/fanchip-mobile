@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'package:fanchip_mobile/model/jenis_model.dart';
+import 'package:fanchip_mobile/utils/config.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class JenisService {
-  final _base = 'http://127.0.0.1:8000/api';
+  final _base = Config.baseUrl;
 
   Future getDataJenis() async {
     try {
@@ -43,7 +44,7 @@ class JenisService {
       print(response.body);
       if (response.statusCode == 200) {
         var jenisJson = jsonDecode(response.body);
-        var jenis = JenisModel.fromJson(jenisJson); 
+        var jenis = JenisModel.fromJson(jenisJson);
         return jenis;
       }
     } catch (e) {
@@ -78,7 +79,7 @@ class JenisService {
     }
   }
 
-    Future<bool> updateJenis(String id, String nama) async {
+  Future<bool> updateJenis(String id, String nama) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final String? token = prefs.getString('token');
@@ -89,9 +90,7 @@ class JenisService {
           'Accept': 'application/json',
           'Authorization': 'Bearer $token',
         },
-        body: {
-          "nama": nama
-        },
+        body: {"nama": nama},
       );
 
       print(response.statusCode);

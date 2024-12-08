@@ -1,21 +1,20 @@
 import 'dart:convert';
-
-import 'package:fanchip_mobile/model/hewan_model.dart';
+import 'package:fanchip_mobile/model/lahir_model.dart';
 import 'package:fanchip_mobile/utils/config.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-class HewanService {
+class LahirService {
   final _base = Config.baseUrl;
 
-  Future getDataHewan() async {
+  Future getDataLahir() async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final String? token = prefs.getString('token');
       final String? idUser = prefs.getString('id_user');
 
       final response =
-          await http.get(Uri.parse('$_base/hewan/$idUser'), headers: {
+          await http.get(Uri.parse('$_base/kawin/$idUser'), headers: {
         'Accept': 'application/json',
         'Authorization': 'Bearer $token',
       });
@@ -24,7 +23,7 @@ class HewanService {
         var jsonResponse = jsonDecode(response.body);
 
         Iterable it = jsonResponse;
-        List<HewanModel> home = it.map((e) => HewanModel.fromJson(e)).toList();
+        List<LahirModel> home = it.map((e) => LahirModel.fromJson(e)).toList();
         return home;
       }
     } catch (e) {
@@ -32,42 +31,42 @@ class HewanService {
     }
   }
 
-  Future getDataHewanId(String idHewan) async {
+  Future getDataLahirId(String idLahir) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final String? token = prefs.getString('token');
 
       final response =
-          await http.get(Uri.parse('$_base/hewan/show/$idHewan'), headers: {
+          await http.get(Uri.parse('$_base/kawin/show/$idLahir'), headers: {
         'Accept': 'application/json',
         'Authorization': 'Bearer $token',
       });
       print(response.body);
       if (response.statusCode == 200) {
-        var hewanJson = jsonDecode(response.body);
-        var hewan = HewanModel.fromJson(hewanJson); 
-        return hewan;
+        var lahirJson = jsonDecode(response.body);
+        var lahir = LahirModel.fromJson(lahirJson);
+        return lahir;
       }
     } catch (e) {
       print(e.toString());
     }
   }
 
-  Future postHewan(String nama, String idJenis, String pemeriksaanFisik,
-      String pemeriksaanLanjutan) async {
+  Future postLahir(String idHewan, String tanggalKawin) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final String? token = prefs.getString('token');
       final String? userId = prefs.getString('id_user');
 
-      final response = await http.post(Uri.parse('$_base/hewan'), headers: {
+      print("idHewan: $idHewan");
+      print("tanggalKawin: $tanggalKawin");
+
+      final response = await http.post(Uri.parse('$_base/kawin'), headers: {
         'Accept': 'application/json',
         'Authorization': 'Bearer $token',
       }, body: {
-        "nama": nama,
-        "id_jenis": idJenis,
-        "pemeriksaan_fisik": pemeriksaanFisik,
-        "pemeriksaan_lanjutan": pemeriksaanLanjutan,
+        "id_hewan": idHewan,
+        "tanggal_kawin": tanggalKawin,
         "id_user": userId,
       });
 
@@ -84,23 +83,21 @@ class HewanService {
     }
   }
 
-  Future<bool> updateHewan(String id, String nama, String idJenis,
-      String pemeriksaanFisik, String pemeriksaanLanjutan) async {
+  Future<bool> updateLahir(
+      String id, String idHewan, String tanggalKawin) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final String? token = prefs.getString('token');
 
       final response = await http.put(
-        Uri.parse('$_base/hewan/$id'),
+        Uri.parse('$_base/jenis/$id'),
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer $token',
         },
         body: {
-          "nama": nama,
-          "id_jenis": idJenis,
-          "pemeriksaan_fisik": pemeriksaanFisik,
-          "pemeriksaan_lanjutan": pemeriksaanLanjutan,
+          "id_hewan": idHewan,
+          "tanggal_kawin": tanggalKawin,
         },
       );
 
@@ -118,13 +115,13 @@ class HewanService {
     }
   }
 
-  Future<bool> deleteHewan(String idHewan) async {
+  Future<bool> deleteHewan(String idLahir) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final String? token = prefs.getString('token');
 
       final response = await http.delete(
-        Uri.parse('$_base/hewan/$idHewan'),
+        Uri.parse('$_base/lahir/$idLahir'),
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer $token',
