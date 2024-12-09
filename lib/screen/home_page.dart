@@ -345,36 +345,41 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
                 Config.spaceSmall,
-                SizedBox(
-                  height: Config.heightSize * 0.07,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: List<Widget>.generate(listJenis.length, (index) {
-                      return Card(
-                        margin: const EdgeInsets.only(right: 20),
-                        color: Colors.green,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 15,
-                            vertical: 10,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: <Widget>[
-                              Text(
-                                listJenis[index].nama,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white,
+                // Menambahkan pengecekan apakah listJenis kosong
+                listJenis.isEmpty
+                    ? const Center(child: Text('Data kosong'))
+                    : SizedBox(
+                        height: Config.heightSize * 0.07,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children:
+                              List<Widget>.generate(listJenis.length, (index) {
+                            return Card(
+                              margin: const EdgeInsets.only(right: 20),
+                              color: Colors.green,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 15,
+                                  vertical: 10,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: <Widget>[
+                                    Text(
+                                      listJenis[index].nama,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
+                            );
+                          }),
                         ),
-                      );
-                    }),
-                  ),
-                ),
+                      ),
                 Config.spaceSmall,
                 const Text(
                   'Kambing',
@@ -384,23 +389,26 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 Config.spaceSmall,
-                Column(
-                  children: List.generate(
-                    listHewan.length,
-                    (index) {
-                      var hewan = listHewan[index] as HewanModel;
-                      return GestureDetector(
-                        onTap: () {
-                          showHewanDetailDialog(context, hewan);
-                        },
-                        child: HewanCard(
-                          nama: hewan.nama,
-                          jenis: hewan.jenis!,
+                // Menambahkan pengecekan apakah listHewan kosong
+                listHewan.isEmpty
+                    ? const Center(child: Text('Data kosong'))
+                    : Column(
+                        children: List.generate(
+                          listHewan.length,
+                          (index) {
+                            var hewan = listHewan[index] as HewanModel;
+                            return GestureDetector(
+                              onTap: () {
+                                showHewanDetailDialog(context, hewan);
+                              },
+                              child: HewanCard(
+                                nama: hewan.nama,
+                                jenis: hewan.jenis!,
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
-                ),
+                      ),
               ],
             ),
           ),
