@@ -1,3 +1,5 @@
+import 'package:fanchip_mobile/model/user_model.dart';
+import 'package:fanchip_mobile/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:fanchip_mobile/components/hewan_card.dart';
 import 'package:fanchip_mobile/model/hewan_model.dart';
@@ -15,13 +17,16 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List listJenis = [];
   List listHewan = [];
+  UserModel? user;
 
   HewanService hewanService = HewanService();
   JenisService jenisService = JenisService();
+  AuthService userService = AuthService();
 
   getData() async {
     listJenis = await jenisService.getDataJenis() ?? [];
     listHewan = await hewanService.getDataHewan() ?? [];
+    user = await userService.getDataUserId();
     setState(() {});
   }
 
@@ -293,22 +298,27 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Admin',
-                      style: TextStyle(
+                      user?.nama ?? 'Loading...',
+                      style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(
-                      child: CircleAvatar(
-                        radius: 30,
-                        child: Icon(Icons.person),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/me');
+                      },
+                      child: const SizedBox(
+                        child: CircleAvatar(
+                          radius: 30,
+                          child: Icon(Icons.person),
+                        ),
                       ),
-                    )
+                    ),
                   ],
                 ),
                 Config.spaceSmall,

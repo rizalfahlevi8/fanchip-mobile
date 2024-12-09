@@ -1,5 +1,6 @@
 import 'package:fanchip_mobile/main_layout.dart';
-import 'package:fanchip_mobile/screen/auth_page.dart';
+import 'package:fanchip_mobile/screen/Auth/auth_page.dart';
+import 'package:fanchip_mobile/screen/Auth/me_page.dart';
 import 'package:fanchip_mobile/screen/hewan/createHewan_page.dart';
 import 'package:fanchip_mobile/screen/hewan/updateHewan_page.dart';
 import 'package:fanchip_mobile/screen/jenis/createJenis_page.dart';
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const AuthPage(),
         '/home': (context) => const MainLayout(),
+        '/me' : (context) => const MePage(),
 
         // hewan
         '/addHewan': (context) => const CreatehewanPage(),

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:fanchip_mobile/model/user_model.dart';
 import 'package:fanchip_mobile/utils/config.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -62,6 +63,51 @@ class AuthService {
       }
     } catch (e) {
       return {'success': false, 'message': 'Terjadi masalah pada koneksi'};
+    }
+  }
+
+  Future getDataUserId() async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String? token = prefs.getString('token');
+      final String? userId = prefs.getString('id_user');
+
+      final response =
+          await http.get(Uri.parse('$_base/auth/$userId'), headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      });
+      print(response.body);
+      if (response.statusCode == 200) {
+        var userJson = jsonDecode(response.body);
+        var user = UserModel.fromJson(userJson); 
+        return user;
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future logout() async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String? token = prefs.getString('token');
+
+      final response = await http.post(Uri.parse('$_base/auth/logout'), headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      });
+
+      print(response.statusCode);
+
+      if (response.statusCode == 201) {
+        return true;
+      } else {
+        print('Error: ${response.statusCode}');
+        return false;
+      }
+    } catch (e) {
+      print(e.toString());
     }
   }
 }

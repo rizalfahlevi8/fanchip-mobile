@@ -35,40 +35,45 @@ class _AuthPageState extends State<AuthPage> {
             isSignIn ? const LoginForm() : const RegisterForm(),
             Config.spaceSmall,
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment:
+                  MainAxisAlignment.center, // Pusatkan Row secara keseluruhan
               children: [
-                Column(
-                  children: [
-                    Text(
+                Expanded(
+                  child: Align(
+                    alignment:
+                        Alignment.centerRight, // Menempatkan teks di kanan
+                    child: Text(
                       isSignIn
                           ? 'Apakah kamu sudah daftar?'
                           : 'Sudah memiliki akun?',
                       style: const TextStyle(
                         fontSize: 16,
                       ),
-                    )
-                  ],
+                    ),
+                  ),
                 ),
-                Column(
-                  children: [
-                    TextButton(
-                        onPressed: () {
-                          setState(() {
-                            isSignIn = !isSignIn;
-                          });
-                        },
-                        child: Text(
-                          isSignIn ? 'Register' : 'Sign In',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ))
-                  ],
-                )
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.centerLeft, // Menempatkan teks di kiri
+                    child: TextButton(
+                      onPressed: () {
+                        setState(() {
+                          isSignIn = !isSignIn;
+                        });
+                      },
+                      child: Text(
+                        isSignIn ? 'Register' : 'Sign In',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ],
-            ),
+            )
           ],
         )),
       ),
