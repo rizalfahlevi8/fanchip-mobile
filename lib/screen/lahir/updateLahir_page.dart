@@ -45,39 +45,43 @@ class _UpdatelahirPageState extends State<UpdatelahirPage> {
     final data = await hewanService.getDataHewan();
     if (data != null) {
       setState(() {
-        listHewan = data;
+        listHewan = data.toSet().toList(); // Menghapus duplikasi jika ada
+        print(listHewan);
       });
     }
   }
 
   Future<void> getLahirData(String id) async {
-  final lahirData = await lahirService.getDataLahirId(id);
-  if (lahirData != null) {
-    setState(() {
-      _selectedHewan = lahirData.idHewan.toString();
+    final lahirData = await lahirService.getDataLahirId(id);
+    if (lahirData != null) {
+      setState(() {
+        _selectedHewan = lahirData.idHewan.toString();
+        print('Selected Hewan ID: $_selectedHewan');
 
-      final originalDate = DateTime.parse(lahirData.tanggalLahir);
-      final formattedDate =
-          DateFormat('EEEE, dd MMMM yyyy').format(originalDate);
+        final originalDate = DateTime.parse(lahirData.tanggalLahir);
+        final formattedDate =
+            DateFormat('EEEE, dd MMMM yyyy').format(originalDate);
 
-      _tglKawinController.text = formattedDate;
+        _tglKawinController.text = formattedDate;
 
-      final DateTime estimasiLahir =
-          originalDate.add(const Duration(days: 150));
-      _estimasiLahir = DateFormat('EEEE, dd MMMM yyyy').format(estimasiLahir);
+        final DateTime estimasiLahir =
+            originalDate.add(const Duration(days: 150));
+        _estimasiLahir = DateFormat('EEEE, dd MMMM yyyy').format(estimasiLahir);
 
-      if (!listHewan.any((hewan) => hewan.id == lahirData.idHewan)) {
-        listHewan.insert(
-            0,
-            HewanModel(
-              id: lahirData.idHewan.toString(),
-              nama: 'Nama Kambing Tidak Diketahui',
-            ));
-      }
-    });
+        // Periksa apakah hewan sudah ada di daftar
+        if (!listHewan
+            .any((hewan) => hewan.id == lahirData.idHewan.toString())) {
+          listHewan.add(HewanModel(
+            id: lahirData.idHewan.toString(),
+            nama: 'Nama Kambing Tidak Diketahui',
+          ));
+        }
+
+        // Hapus duplikasi jika ada
+        listHewan = listHewan.toSet().toList();
+      });
+    }
   }
-}
-
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? selected = await showDatePicker(
@@ -138,9 +142,10 @@ class _UpdatelahirPageState extends State<UpdatelahirPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           DropdownButtonFormField<String>(
-                            value: listHewan.any((jenis) => jenis.id == _selectedHewan)
-                                      ? _selectedHewan
-                                      : null,
+                            value: listHewan
+                                    .any((jenis) => jenis.id == _selectedHewan)
+                                ? _selectedHewan
+                                : null,
                             decoration: InputDecoration(
                               labelText: 'Nama Kambing',
                               prefixIcon: const Icon(Icons.category),
