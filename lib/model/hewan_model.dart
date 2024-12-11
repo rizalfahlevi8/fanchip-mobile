@@ -14,6 +14,14 @@ class HewanModel {
       this.pemeriksaan_fisik,
       this.pemeriksaan_lanjutan});
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is HewanModel && runtimeType == other.runtimeType && id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
+
   factory HewanModel.fromJson(Map<String, dynamic> json) {
     return HewanModel(
         id: json['id'].toString(),
