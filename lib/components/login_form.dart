@@ -1,6 +1,5 @@
 import 'package:fanchip_mobile/components/button.dart';
 import 'package:fanchip_mobile/services/auth_service.dart';
-import 'package:fanchip_mobile/utils/config.dart';
 import 'package:flutter/material.dart';
 
 class LoginForm extends StatefulWidget {

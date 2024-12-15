@@ -88,7 +88,7 @@ class _CreatehewanPageState extends State<CreatehewanPage> {
                             decoration: InputDecoration(
                               hintText: 'ID Kambing',
                               labelText: 'ID Kambing',
-                              prefixIcon: const Icon(Icons.pets),
+                              prefixIcon: const Icon(Icons.abc),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),

@@ -20,6 +20,7 @@ class _UpdatelahirPageState extends State<UpdatelahirPage> {
   String? _selectedHewan;
   String? _estimasiLahir;
   String? _tglKawinToSend;
+   String? _selectedHewanCode; 
 
   List<HewanModel> listHewan = [];
   String? _lahirId;
@@ -55,6 +56,7 @@ class _UpdatelahirPageState extends State<UpdatelahirPage> {
     if (lahirData != null) {
       setState(() {
         _selectedHewan = lahirData.idHewan.toString();
+        _selectedHewanCode = lahirData.codeHewan;
         print('Selected Hewan ID: $_selectedHewan');
 
         final originalDate = DateTime.parse(lahirData.tanggalLahir);
@@ -163,6 +165,9 @@ class _UpdatelahirPageState extends State<UpdatelahirPage> {
                             onChanged: (value) {
                               setState(() {
                                 _selectedHewan = value;
+                                 _selectedHewanCode = listHewan
+                                    .firstWhere((hewan) => hewan.id == value)
+                                    .code_hewan; // Ganti `kode` dengan nama field yang sesuai
                               });
                             },
                             validator: (value) {
@@ -172,6 +177,41 @@ class _UpdatelahirPageState extends State<UpdatelahirPage> {
                               return null;
                             },
                           ),
+                          if (_selectedHewanCode != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Icon(
+                                    Icons.abc,
+                                    color: Colors.black54,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          'Code Kambing:',
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black54),
+                                        ),
+                                        Text(
+                                          _selectedHewanCode!,
+                                          style: const TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.black54),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           const SizedBox(height: 15),
                           TextFormField(
                             controller: _tglKawinController,

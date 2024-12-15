@@ -19,7 +19,9 @@ class _CreatelahirPageState extends State<CreatelahirPage> {
 
   String? _selectedHewan;
   String? _estimasiLahir; // Menyimpan hasil estimasi lahir
-  String? _tglKawinToSend; // Tanggal kawin dalam format yyyy-MM-dd untuk pengiriman
+  String?
+      _tglKawinToSend; // Tanggal kawin dalam format yyyy-MM-dd untuk pengiriman
+  String? _selectedHewanCode; // Untuk menyimpan code kambing
 
   List<HewanModel> listHewan = [];
   final HewanService hewanService = HewanService();
@@ -112,6 +114,9 @@ class _CreatelahirPageState extends State<CreatelahirPage> {
                             onChanged: (value) {
                               setState(() {
                                 _selectedHewan = value;
+                                _selectedHewanCode = listHewan
+                                    .firstWhere((hewan) => hewan.id == value)
+                                    .code_hewan; // Ganti `kode` dengan nama field yang sesuai
                               });
                             },
                             validator: (value) {
@@ -121,6 +126,41 @@ class _CreatelahirPageState extends State<CreatelahirPage> {
                               return null;
                             },
                           ),
+                          if (_selectedHewanCode != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Icon(
+                                    Icons.abc,
+                                    color: Colors.black54,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          'Code Kambing:',
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black54),
+                                        ),
+                                        Text(
+                                          _selectedHewanCode!,
+                                          style: const TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.black54),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           const SizedBox(height: 15),
                           TextFormField(
                             controller: _tglKawinController,
@@ -134,8 +174,7 @@ class _CreatelahirPageState extends State<CreatelahirPage> {
                               ),
                               suffixIcon: IconButton(
                                 icon: const Icon(Icons.date_range),
-                                onPressed: () =>
-                                    _selectDate(context),
+                                onPressed: () => _selectDate(context),
                               ),
                             ),
                             validator: (value) {
@@ -185,7 +224,8 @@ class _CreatelahirPageState extends State<CreatelahirPage> {
                               title: "Submit",
                               disable: false,
                               onPressed: () async {
-                                if (_formKey.currentState?.validate() ?? false) {
+                                if (_formKey.currentState?.validate() ??
+                                    false) {
                                   final result = await lahirService.postLahir(
                                     _selectedHewan!,
                                     _tglKawinToSend!,
@@ -193,8 +233,8 @@ class _CreatelahirPageState extends State<CreatelahirPage> {
                                   if (result) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
-                                        content: Text(
-                                            'Data berhasil ditambahkan!'),
+                                        content:
+                                            Text('Data berhasil ditambahkan!'),
                                         backgroundColor: Colors.green,
                                       ),
                                     );
