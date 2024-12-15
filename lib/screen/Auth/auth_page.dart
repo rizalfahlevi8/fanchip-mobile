@@ -1,6 +1,5 @@
 import 'package:fanchip_mobile/components/login_form.dart';
 import 'package:fanchip_mobile/components/register_form.dart';
-import 'package:fanchip_mobile/utils/config.dart';
 import 'package:flutter/material.dart';
 
 class AuthPage extends StatefulWidget {

@@ -1,4 +1,4 @@
-import 'package:fanchip_mobile/screen/home_page.dart';
+import 'package:fanchip_mobile/screen/home/home_page.dart';
 import 'package:fanchip_mobile/screen/lahir/indexLahir_page.dart';
 import 'package:flutter/material.dart';
 

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 class HewanCard extends StatelessWidget {
-  const HewanCard({super.key, required this.nama, required this.jenis});
+  const HewanCard({super.key, required this.nama, required this.jenis, required this.codeHewan});
 
   final String nama;
   final String jenis;
+  final String codeHewan;
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +32,11 @@ class HewanCard extends StatelessWidget {
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      "ID: $codeHewan",
+                      style: const TextStyle(fontSize: 16),
                     ),
                     const SizedBox(height: 10),
                     Text(

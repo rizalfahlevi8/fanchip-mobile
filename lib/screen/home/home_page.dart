@@ -72,6 +72,16 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
+                Center(
+                  child: Text(
+                    hewan.code_hewan.toString(),
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 107, 193, 110),
+                    ),
+                  ),
+                ),
                 const Divider(
                   color: Colors.green,
                   thickness: 1.5,
@@ -403,6 +413,7 @@ class _HomePageState extends State<HomePage> {
                               },
                               child: HewanCard(
                                 nama: hewan.nama,
+                                codeHewan: hewan.code_hewan!,
                                 jenis: hewan.jenis!,
                               ),
                             );

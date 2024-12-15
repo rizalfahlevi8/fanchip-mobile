@@ -13,9 +13,12 @@ class UpdatehewanPage extends StatefulWidget {
 
 class _UpdatehewanPageState extends State<UpdatehewanPage> {
   final _formKey = GlobalKey<FormState>();
+  final _codeController = TextEditingController();
   final _nameController = TextEditingController();
   final _pemeriksaanLanjutanController = TextEditingController();
   final _pemeriksaanFisikController = TextEditingController();
+
+  String? _codeError;
 
   String? _selectedJenisKambing;
   List<JenisModel> listJenis = [];
@@ -50,9 +53,11 @@ class _UpdatehewanPageState extends State<UpdatehewanPage> {
     final hewanData = await hewanService.getDataHewanId(id);
     if (hewanData != null) {
       setState(() {
+        _codeController.text = hewanData.code_hewan ?? '';
         _nameController.text = hewanData.nama ?? '';
         _pemeriksaanFisikController.text = hewanData.pemeriksaan_fisik ?? '';
-        _pemeriksaanLanjutanController.text = hewanData.pemeriksaan_lanjutan ?? '';
+        _pemeriksaanLanjutanController.text =
+            hewanData.pemeriksaan_lanjutan ?? '';
         _selectedJenisKambing = hewanData.jenis_id;
 
         // Jika jenis_id tidak ditemukan, tambahkan sementara
@@ -68,6 +73,7 @@ class _UpdatehewanPageState extends State<UpdatehewanPage> {
 
   @override
   void dispose() {
+    _codeController.dispose();
     _nameController.dispose();
     _pemeriksaanLanjutanController.dispose();
     _pemeriksaanFisikController.dispose();
@@ -108,6 +114,30 @@ class _UpdatehewanPageState extends State<UpdatehewanPage> {
                             key: _formKey,
                             child: Column(
                               children: [
+                                // Input Kode Kambing
+                                TextFormField(
+                                  controller: _codeController,
+                                  keyboardType: TextInputType.name,
+                                  decoration: InputDecoration(
+                                    hintText: 'ID Kambing',
+                                    labelText: 'ID Kambing',
+                                    prefixIcon: const Icon(Icons.pets),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'ID Kambing wajib diisi';
+                                    }
+                                    if (_codeError != null) {
+                                      return _codeError;
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(height: 15),
+
                                 // Input Nama Kambing
                                 TextFormField(
                                   controller: _nameController,
@@ -131,7 +161,8 @@ class _UpdatehewanPageState extends State<UpdatehewanPage> {
 
                                 // Dropdown Jenis Kambing
                                 DropdownButtonFormField<String>(
-                                  value: listJenis.any((jenis) => jenis.id == _selectedJenisKambing)
+                                  value: listJenis.any((jenis) =>
+                                          jenis.id == _selectedJenisKambing)
                                       ? _selectedJenisKambing
                                       : null,
                                   decoration: InputDecoration(
@@ -142,7 +173,7 @@ class _UpdatehewanPageState extends State<UpdatehewanPage> {
                                     ),
                                   ),
                                   items: [
-                                    DropdownMenuItem(
+                                    const DropdownMenuItem(
                                       value: null,
                                       child: Text('Pilih Jenis Kambing'),
                                     ),
@@ -174,7 +205,8 @@ class _UpdatehewanPageState extends State<UpdatehewanPage> {
                                   decoration: InputDecoration(
                                     hintText: 'Pemeriksaan Fisik',
                                     labelText: 'Pemeriksaan Fisik',
-                                    prefixIcon: const Icon(Icons.health_and_safety),
+                                    prefixIcon:
+                                        const Icon(Icons.health_and_safety),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(8),
                                     ),
@@ -214,27 +246,51 @@ class _UpdatehewanPageState extends State<UpdatehewanPage> {
                                   title: "Update",
                                   disable: false,
                                   onPressed: () async {
+                                    setState(() {
+                                      _codeError = null;
+                                    });
+
                                     if (_formKey.currentState!.validate()) {
-                                      bool result = await hewanService.updateHewan(
+                                      final result =
+                                          await hewanService.updateHewan(
                                         _hewanId!,
+                                        _codeController.text,
                                         _nameController.text,
                                         _selectedJenisKambing!,
                                         _pemeriksaanFisikController.text,
                                         _pemeriksaanLanjutanController.text,
                                       );
 
-                                      if (result) {
-                                        ScaffoldMessenger.of(context).showSnackBar(
+                                      if (result != null && result['success']) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
                                           const SnackBar(
-                                            content: Text('Data berhasil diperbarui!'),
+                                            content: Text(
+                                                'Data berhasil diperbarui!'),
                                             backgroundColor: Colors.green,
                                           ),
                                         );
-                                        Navigator.of(context).popAndPushNamed('/home');
+                                        Navigator.of(context)
+                                            .popAndPushNamed('/home');
                                       } else {
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          const SnackBar(
-                                            content: Text('Pembaruan data gagal!'),
+                                        setState(() {
+                                          if (result!['errors'] != null) {
+                                            // Map error ke field terkait
+                                            _codeError = result['errors']
+                                                    ['code_hewan']
+                                                ?.first;
+                                          }
+                                        });
+
+                                        // Validasi ulang form untuk menampilkan pesan error
+                                        _formKey.currentState?.validate();
+
+                                        // Tampilkan pesan error melalui SnackBar
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
+                                            content: Text(result!['message'] ??
+                                                'Terjadi kesalahan'),
                                             backgroundColor: Colors.red,
                                           ),
                                         );

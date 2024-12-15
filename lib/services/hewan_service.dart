@@ -45,7 +45,7 @@ class HewanService {
       print(response.body);
       if (response.statusCode == 200) {
         var hewanJson = jsonDecode(response.body);
-        var hewan = HewanModel.fromJson(hewanJson); 
+        var hewan = HewanModel.fromJson(hewanJson);
         return hewan;
       }
     } catch (e) {
@@ -53,7 +53,11 @@ class HewanService {
     }
   }
 
-  Future postHewan(String nama, String idJenis, String pemeriksaanFisik,
+  Future<Map<String, dynamic>> postHewan(
+      String code,
+      String nama,
+      String idJenis,
+      String pemeriksaanFisik,
       String pemeriksaanLanjutan) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -64,6 +68,7 @@ class HewanService {
         'Accept': 'application/json',
         'Authorization': 'Bearer $token',
       }, body: {
+        "code_hewan": code,
         "nama": nama,
         "id_jenis": idJenis,
         "pemeriksaan_fisik": pemeriksaanFisik,
@@ -72,20 +77,30 @@ class HewanService {
       });
 
       print(response.statusCode);
+      print(response.body);
 
       if (response.statusCode == 201) {
-        return true;
+        return {"success": true};
+      } else if (response.statusCode == 422) {
+        // Untuk validasi gagal
+        final body = jsonDecode(response.body);
+        return {"success": false, "errors": body['errors']};
       } else {
-        print('Error: ${response.statusCode}, Body: ${response.body}');
-        return false;
+        return {"success": false, "message": "Terjadi kesalahan pada server"};
       }
     } catch (e) {
       print(e.toString());
+      return {"success": false, "message": "Terjadi kesalahan koneksi"};
     }
   }
 
-  Future<bool> updateHewan(String id, String nama, String idJenis,
-      String pemeriksaanFisik, String pemeriksaanLanjutan) async {
+  Future<Map<String, dynamic>?> updateHewan(
+      String id,
+      String code,
+      String nama,
+      String idJenis,
+      String pemeriksaanFisik,
+      String pemeriksaanLanjutan) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final String? token = prefs.getString('token');
@@ -97,6 +112,7 @@ class HewanService {
           'Authorization': 'Bearer $token',
         },
         body: {
+          "code_hewan": code,
           "nama": nama,
           "id_jenis": idJenis,
           "pemeriksaan_fisik": pemeriksaanFisik,
@@ -104,17 +120,20 @@ class HewanService {
         },
       );
 
-      print(response.statusCode);
+      print(response.body);
 
-      if (response.statusCode == 200) {
-        return true;
+       if (response.statusCode == 201) {
+        return {"success": true};
+      } else if (response.statusCode == 422) {
+        // Untuk validasi gagal
+        final body = jsonDecode(response.body);
+        return {"success": false, "errors": body['errors']};
       } else {
-        print('Error: ${response.statusCode}, Body: ${response.body}');
-        return false;
+        return {"success": false, "message": "Terjadi kesalahan pada server"};
       }
     } catch (e) {
       print(e.toString());
-      return false;
+      return {"success": false, "message": "Terjadi kesalahan koneksi"};
     }
   }
 

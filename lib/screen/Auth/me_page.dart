@@ -84,7 +84,7 @@ class _MePageState extends State<MePage> {
                           ),
                         );
                         Navigator.pop(context);
-                        Navigator.pushReplacementNamed(context, "/");
+                        Navigator.pushReplacementNamed(context, "/auth");
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(

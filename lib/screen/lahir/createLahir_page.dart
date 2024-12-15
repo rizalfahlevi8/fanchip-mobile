@@ -1,5 +1,5 @@
 import 'package:fanchip_mobile/components/button.dart';
-import 'package:fanchip_mobile/main_layout.dart';
+import 'package:fanchip_mobile/screen/main_layout.dart';
 import 'package:fanchip_mobile/model/hewan_model.dart';
 import 'package:fanchip_mobile/services/hewan_service.dart';
 import 'package:fanchip_mobile/services/lahir_service.dart';

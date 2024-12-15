@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 class LahirCard extends StatelessWidget {
-  const LahirCard({super.key, required this.nama, required this.jenis, required this.tanggal_lahir});
+  const LahirCard({super.key, required this.nama, required this.code, required this.jenis, required this.tanggal_lahir});
 
   final String nama;
+  final String code;
   final String jenis;
   final String tanggal_lahir;
 
@@ -32,6 +33,11 @@ class LahirCard extends StatelessWidget {
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      "ID: $code",
+                      style: const TextStyle(fontSize: 16),
                     ),
                     const SizedBox(height: 10),
                     Text(

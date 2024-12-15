@@ -1,6 +1,7 @@
 class HewanModel {
   final String id;
   final String nama;
+  final String? code_hewan;
   final String? jenis;
   final String? jenis_id;
   final String? pemeriksaan_fisik;
@@ -9,6 +10,7 @@ class HewanModel {
   const HewanModel(
       {required this.id,
       required this.nama,
+      this.code_hewan,
       this.jenis,
       this.jenis_id,
       this.pemeriksaan_fisik,
@@ -26,6 +28,7 @@ class HewanModel {
     return HewanModel(
         id: json['id'].toString(),
         nama: json['nama'] as String,
+        code_hewan: json['code_hewan'] as String?,
         jenis: json['jenis'] as String?,
         jenis_id: json['jenis_id']?.toString(),
         pemeriksaan_fisik: json['pemeriksaan_fisik'] as String?,

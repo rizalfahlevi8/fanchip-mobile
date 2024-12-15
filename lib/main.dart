@@ -1,4 +1,4 @@
-import 'package:fanchip_mobile/main_layout.dart';
+import 'package:fanchip_mobile/screen/main_layout.dart';
 import 'package:fanchip_mobile/screen/Auth/auth_page.dart';
 import 'package:fanchip_mobile/screen/Auth/me_page.dart';
 import 'package:fanchip_mobile/screen/hewan/createHewan_page.dart';
@@ -7,6 +7,7 @@ import 'package:fanchip_mobile/screen/jenis/createJenis_page.dart';
 import 'package:fanchip_mobile/screen/jenis/updateJenis_page.dart';
 import 'package:fanchip_mobile/screen/lahir/createLahir_page.dart';
 import 'package:fanchip_mobile/screen/lahir/updateLahir_page.dart';
+import 'package:fanchip_mobile/screen/splass_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -32,7 +33,8 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => const AuthPage(),
+        '/': (context) => SplashScreen(),
+        '/auth': (context) => const AuthPage(),
         '/home': (context) => const MainLayout(),
         '/me' : (context) => const MePage(),
 

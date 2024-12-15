@@ -1,6 +1,7 @@
 class LahirModel {
   final int id;
   final int idHewan;
+  final String? codeHewan;
   final String? namaHewan; // Nullable
   final String? jenisHewan; // Nullable
   final String? tanggalKawin; // Nullable
@@ -9,6 +10,7 @@ class LahirModel {
   LahirModel({
     required this.id,
     required this.idHewan,
+    this.codeHewan,
     this.namaHewan,
     this.jenisHewan,
     this.tanggalKawin,
@@ -19,6 +21,7 @@ class LahirModel {
     return LahirModel(
       id: json['id'],
       idHewan: json['id_hewan'],
+      codeHewan: json['code_hewan'],
       namaHewan: json['nama_hewan'],
       jenisHewan: json['jenis_hewan'],
       tanggalKawin: json['tanggal_kawin'],

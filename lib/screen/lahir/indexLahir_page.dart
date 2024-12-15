@@ -69,6 +69,15 @@ class _IndexlahirPageState extends State<IndexlahirPage> {
                   ),
                   textAlign: TextAlign.center,
                 ),
+                Text(
+                  lahir.codeHewan ?? 'Code Hewan Tidak Diketahui',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey[500],
+                  ),
+                  textAlign: TextAlign.center,
+                ),
                 const SizedBox(height: 10),
                 Text(
                   'Jenis Hewan: ${lahir.jenisHewan ?? 'Tidak diketahui'}',
@@ -190,6 +199,7 @@ class _IndexlahirPageState extends State<IndexlahirPage> {
                       },
                       child: LahirCard(
                         nama: lahir.namaHewan ?? 'Tidak diketahui',
+                        code: lahir.codeHewan ?? 'Tidak diketahui',
                         jenis: lahir.jenisHewan ?? 'Tidak diketahui',
                         tanggal_lahir:
                             lahir.tanggalLahir ?? 'Tanggal tidak tersedia',
